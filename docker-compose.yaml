@@ -37,7 +37,7 @@ services:
     depends_on:
       - strapi
     environment:
-      - STRAPI_URL=http://strapi:1337
+      - VITE_STRAPI_BASE_URL=http://192.168.1.151:1337
     networks:
       - app-network
 
