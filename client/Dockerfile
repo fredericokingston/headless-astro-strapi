@@ -1,5 +1,5 @@
 # Multi-stage build para o client Astro
-FROM node:18-alpine AS builder
+FROM node:lts-alpine AS builder
 
 # Definir diretório de trabalho
 WORKDIR /app
@@ -21,7 +21,7 @@ COPY . .
 RUN pnpm run build
 
 # Stage de produção com Node.js
-FROM node:18-alpine
+FROM node:lts-alpine AS runtime
 
 # Instalar pnpm globalmente
 RUN npm install -g pnpm
@@ -43,4 +43,4 @@ COPY --from=builder /app/dist ./dist
 EXPOSE 3000
 
 # Comando para iniciar Astro
-CMD ["npm", "run", "preview"]
+CMD ["pnpm", "run", "preview"]
