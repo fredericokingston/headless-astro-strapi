@@ -1,0 +1,31 @@
+---
+import type { ContentWithImageProps } from "../../utils/types";
+import StrapiImage from "../StrapiImage.astro";
+interface Props {
+  data: ContentWithImageProps;
+}
+
+const {
+  data: { heading, text, image, link, reversed },
+} = Astro.props;
+---
+
+<section>
+  <div class="py-20 bg-gray-50 ">
+    <div class="container mx-auto px-4">
+      <div class={`mb-8 flex flex-col lg:flex-row gap-4 ${reversed && 'lg:flex-row-reverse'}`}>
+        <div class="w-full lg:w-1/2 ">
+          <StrapiImage src={image.url} alt={image.alternativeText} height={600} width={800} class="object-cover" />
+        </div>
+        <div class="flex flex-col justify-center w-full lg:w-1/2 py-6 lg:pt-10 px-6 rounded-r bg-white">
+          <h2 class="my-4 text-2xl font-bold">{heading}</h2>
+          <p class="mb-4 text-gray-400 leading-loose">{text}</p>
+          {
+            link &&
+            <a class="text-green-600 hover:text-green-700 font-bold" href={link.href} target={link.isExternal ? '_blank' : '_self'}>{link.label}</a>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

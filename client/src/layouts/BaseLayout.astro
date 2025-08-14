@@ -1,0 +1,35 @@
+---
+import "../styles/global.css";
+import { getGlobalPageData } from "../utils/loaders";
+
+import Header from "../components/Header.astro";
+import Banner from "../components/Banner.astro";
+import Footer from "../components/Footer.astro";
+
+const data = await getGlobalPageData();
+const { header, banner, footer } = data;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro Basics</title>
+    <meta name="description" content="Astro Basics" />
+  </head>
+  <body class="bg-gray-50">
+    { banner && <Banner data={banner} /> }
+    <Header data={header} />
+    <main class="container mx-auto my-0">
+      <slot />
+    </main>
+    { footer && <Footer data={footer} /> }
+  </body>
+</html>
+<style>
+  html,
+
+</style>

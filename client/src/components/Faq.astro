@@ -1,0 +1,57 @@
+---
+interface Props {
+  question: string;
+  answer: string;
+}
+
+const { question, answer } = Astro.props;
+---
+
+<li class="p-6 bg-gray-50 rounded shadow faq-item">
+  <button
+    class="w-full flex justify-between items-center text-left font-bold font-heading hover:text-gray-600 faq-item-button"
+  >
+    <span class="text-xl">{question}</span>
+    <svg
+      class="w-4 h-4 text-green-600 transition-transform duration-300 faq-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+      stroke="currentColor"
+    >
+      <path
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        d="M19 14l-7 7m0 0l-7-7m7 7V3"
+      ></path>
+    </svg>
+  </button>
+  <p class="hidden mt-4 text-gray-400 font-normal leading-loose faq-item-answer">{answer}</p>
+</li>
+
+<style>
+  .faq-item-button {
+    cursor: pointer;
+  }
+
+
+  .faq-icon.rotate-90 {
+    transform: rotate(90deg);
+  }
+</style>
+
+<script>
+  const faqItems = document.querySelectorAll('.faq-item'); // Select all FAQ items
+
+  faqItems.forEach(faqItem => { // Loop through each FAQ item
+    const faqItemButton = faqItem.querySelector('.faq-item-button') as HTMLButtonElement;
+    const faqItemAnswer = faqItem.querySelector('.faq-item-answer') as HTMLParagraphElement;
+    const faqIcon = faqItem.querySelector('.faq-icon') as SVGElement;
+
+    faqItemButton.addEventListener('click', () => {
+      faqItemAnswer.classList.toggle('hidden');
+      faqIcon.classList.toggle('rotate-90');
+    });
+  });
+</script>

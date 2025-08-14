@@ -1,0 +1,56 @@
+---
+import type { FeaturedArticlesProps } from "../../utils/types";
+import { formatDate } from "../../utils/index";
+import StrapiImage from "../StrapiImage.astro";
+
+interface Props {
+  data: FeaturedArticlesProps;
+}
+
+const {
+  data: { articles },
+} = Astro.props;
+---
+
+<section>
+  <div class="py-20 bg-gray-50">
+    <div class="container mx-auto px-4 w-full lg:w-3/4">
+      <div class="flex gap-4 flex-wrap">
+        {
+          articles.map((article) => (
+            <a href={`/blog/${article.slug}`} class="flex flex-wrap -mx-3">
+              <div class="mb-4 lg:mb-0 w-full lg:w-1/4 px-3">
+                <StrapiImage
+                  src={article.featuredImage.url}
+                  alt={article.featuredImage.alternativeText}
+                  width={300}
+                  height={200}
+                  class="w-full h-full object-cover rounded"
+                />
+              </div>  
+              <div class="w-full lg:w-3/4 px-3">
+                <span class="hover:underline">
+                  <h3 class="mb-1 text-2xl font-bold font-heading">
+                    {article.title}
+                  </h3>
+                </span>
+                <div class="mb-2 flex items-center text-sm">
+                  <span
+                    class="text-green-600 hover:text-green-700"
+                  >
+                    {article.author.fullName}
+                  </span>
+                  <span class="text-gray-400 mx-2">•</span>
+                  <span class="text-gray-400">
+                    {formatDate(article.publishedAt)}
+                  </span>
+                </div>
+                <p class="text-gray-500">{article.description}</p>
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </div>
+  </div>
+</section>
