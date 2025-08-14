@@ -1,46 +1,24 @@
-# Multi-stage build para o client Astro
-FROM node:lts-alpine AS builder
-
-# Definir diretório de trabalho
+FROM node:lts AS base
 WORKDIR /app
-
-# Copiar arquivos de dependências
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
-
-# Instalar pnpm globalmente
+COPY package.json pnpm-lock.yaml ./
 RUN npm install -g pnpm
 
-# Instalar dependências
-RUN pnpm install --frozen-lockfile
+FROM base AS prod-deps
+RUN pnpm i --frozen-lockfile
 
-# Copiar código fonte
+FROM base AS build-deps
+RUN pnpm i
+
+FROM build-deps AS build
 COPY . .
+ENV VITE_STRAPI_BASE_URL=http://192.168.1.151:1337
+RUN pnpm build
 
-# Build da aplicação
-RUN pnpm run build
+FROM base AS runtime
+COPY --from=prod-deps /app/node_modules ./node_modules
+COPY --from=build /app/dist ./dist
 
-# Stage de produção com Node.js
-FROM node:lts-alpine AS runtime
-
-# Instalar pnpm globalmente
-RUN npm install -g pnpm
-
-# Definir diretório de trabalho
-WORKDIR /app
-
-# Copiar arquivos de dependências
-COPY package*.json ./
-COPY pnpm-lock.yaml ./
-
-# Instalar apenas dependências de produção
-RUN pnpm install --frozen-lockfile --prod
-
-# Copiar arquivos buildados do stage anterior
-COPY --from=builder /app/dist ./dist
-
-# Expor porta 3000
-EXPOSE 3000
-
-# Comando para iniciar Astro
-CMD ["pnpm", "run", "preview"]
+ENV HOST=0.0.0.0
+ENV PORT=4321
+EXPOSE 4321
+CMD node ./dist/server/entry.mjs
