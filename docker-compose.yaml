@@ -1,0 +1,52 @@
+version: "3.8"
+
+services:
+  # Serviço Strapi (Backend)
+  strapi:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    container_name: strapi-server
+    restart: unless-stopped
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: production
+      DATABASE_CLIENT: sqlite
+      DATABASE_FILENAME: .tmp/data.db
+      JWT_SECRET: ${JWT_SECRET:-your-super-secret-jwt-token-with-at-least-32-characters-long}
+      ADMIN_JWT_SECRET: ${ADMIN_JWT_SECRET:-your-super-secret-admin-jwt-token-with-at-least-32-characters-long}
+      API_TOKEN_SALT: ${API_TOKEN_SALT:-your-super-secret-api-token-salt-with-at-least-32-characters-long}
+      APP_KEYS: ${APP_KEYS:-your-super-secret-app-keys-with-at-least-32-characters-long}
+      TRANSFER_TOKEN_SALT: ${TRANSFER_TOKEN_SALT:-your-super-secret-transfer-token-salt-with-at-least-32-characters-long}
+    volumes:
+      - strapi_data:/app/.tmp
+      - strapi_uploads:/app/public/uploads
+    networks:
+      - app-network
+
+  # Serviço Astro (Frontend)
+  astro:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    container_name: astro-client
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    depends_on:
+      - strapi
+    environment:
+      - STRAPI_URL=http://strapi:1337
+    networks:
+      - app-network
+
+volumes:
+  strapi_data:
+    driver: local
+  strapi_uploads:
+    driver: local
+
+networks:
+  app-network:
+    driver: bridge
