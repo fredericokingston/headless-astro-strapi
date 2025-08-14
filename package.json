@@ -4,14 +4,14 @@
   "description": "Astro 5 project with Strapi 5",
   "type": "module",
   "scripts": {
-    "client": "yarn dev --prefix ../client/",
-    "server": "yarn dev --prefix ../server/",
-    "setup:client": "cd client && yarn && node --loader ts-node/esm ../copy-env.mts ./",
-    "setup:server": "cd server && yarn && node --loader ts-node/esm ../copy-env.mts ./",
-    "setup": "yarn install && yarn setup:client && yarn setup:server",
-    "dev": "yarn concurrently \"cd server && yarn develop\" \"npx wait-on http://localhost:1337 && cd client && yarn dev\"",
-    "seed": "cd server && yarn strapi import -f ./seed-data.tar.gz --force",
-    "export": "cd server && yarn strapi export --no-encrypt -f ./seed-data",
+    "client": "pnpm dev --prefix ../client/",
+    "server": "pnpm dev --prefix ../server/",
+    "setup:client": "cd client && pnpm && node --loader ts-node/esm ../copy-env.mts ./",
+    "setup:server": "cd server && pnpm && node --loader ts-node/esm ../copy-env.mts ./",
+    "setup": "pnpm install && pnpm setup:client && pnpm setup:server",
+    "dev": "pnpm concurrently \"cd server && pnpm develop\" \"npx wait-on http://localhost:1337 && cd client && pnpm dev\"",
+    "seed": "cd server && pnpm strapi import -f ./seed-data.tar.gz --force",
+    "export": "cd server && pnpm strapi export --no-encrypt -f ./seed-data",
     "repo:upstream": "git fetch upstream && git merge upstream/main"
   },
   "dependencies": {
